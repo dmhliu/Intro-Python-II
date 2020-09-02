@@ -79,7 +79,7 @@ def main():
             if newplayer.move_to(rawinput):
                 print(f"{newplayer} moved to the {newplayer.getlocationname()}")
             else:
-                print(f".\n..\n...\n\....yeah, nope. there no room in that direction!")
+                print(f".\n..\n...\n....yeah, nope. there no room in that direction!")
                 print(f"HINT: try {newplayer.getlocation().get_neighbor()}")
         # If the user enters a cardinal direction, attempt to move to the room there.
     # Print an error message if the movement isn't allowed.
