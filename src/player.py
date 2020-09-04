@@ -40,14 +40,19 @@ class Player:
         direction : string {n,s,e,w}
         return : bool True if current room neighbor exists else False
         """
-        if self.room.neighbor[direction]:  #check if room in dir exists
-            self.__set_room__(self.room.neighbor[direction])
-            print(f"..you move {direction}, and enter {self.room})")
-            print(f"\n\n... you see the following objects:",
-                f" {[item.name for item in self.room.getinventory()]}")
-            return True
-        else:
+        try:
+            to_dest =self.room.neighbor[direction]  #check if room in dir exists
+            if to_dest :
+                self.__set_room__(to_dest)
+                print(f"..you move {direction}, and enter {self.room})")
+                print(f"\n... you see the following objects:",
+                    f" {[item.name for item in self.room.getinventory()]}")
+                return True
+            else:
+                return False
+        except KeyError:
             return False
+
     def pickup(self,itemname):
         # validate item is present in room
         thething = self.room.remove_item(itemname) # if itemname is found, will ret the obj

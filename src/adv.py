@@ -82,7 +82,7 @@ def main():
             }
     while True: 
     # * Waits for user input and decides what to do.
-        rawinput = input("what is your bidding? [n|s|e|w|q] : ")
+        rawinput = input("what is your bidding? [n|s|e|w|q] : \n")
         parsed_arg_it = iter(parse(rawinput))
         arg = next(parsed_arg_it) # get first arg
         if  arg in directions:  # handle legacy shortcuts
@@ -96,8 +96,10 @@ def main():
                 if arg in alias:
                     try: 
                         a = next(parsed_arg_it)   # is there a following arg?
-                        cmd(a)
-                        break
+                        if cmd(a):
+                            break
+                        else:
+                            print(f"You can {arg} , but you cant {arg} {a}")
                     except StopIteration:  # only 1 arg try to execute
                         try:
                             cmd()
