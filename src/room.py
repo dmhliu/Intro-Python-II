@@ -14,7 +14,7 @@ class Room:
         self.s_to = None
         self.e_to = None
         self.w_to = None
-
+        self.inventory = []  # list of items in room
         self.neighbor = {  # store 
                         'n' : self.n_to,
                         's' : self.s_to,
@@ -48,4 +48,15 @@ class Room:
             return True
         else:
             return False
+    def getinventory(self):
+        return self.inventory
+    def remove_item(self, item):
+        try:
+            self.inventory.remove(item)
+            return True
+        except ValueError: 
+            return False
+    def add_item(self, item):
+        self.inventory.append(item)
+    
 

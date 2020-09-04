@@ -5,7 +5,8 @@ class Player:
     def __init__(self, name='john doe', room=None): 
         """create player in a room, default to outside"""
         self.name = name
-        self.room = room
+        self.room = room 
+
     def __str__(self):
         return self.name
     def getname(self):
@@ -23,7 +24,12 @@ class Player:
         direction : string {n,s,e,w}
         return : bool True if current room neighbor exists else False
         """
-        
+    def pickup(self,item):
+        # validate item is present in room
+        if self.room.remove_item(item):
+            print(f"item {item}was picked up")
+    def drop(self,item):
+        pass
         if self.room.neighbor[direction]:  #check if room in dir exists
             self.__set_room__(self.room.neighbor[direction])
             return True

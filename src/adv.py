@@ -1,3 +1,4 @@
+import re
 from room import Room
 from player import Player
 
@@ -48,42 +49,62 @@ def main():
 
     pname = input("Please give your player a name: ")
     newplayer = Player(name=pname, room=room['outside']) # starts outside by default
-    validinputs =  ['n','s','e','w','q']  
+    validinputs =  ['n','s','e','w','i','q']  
+    directions = ['n','s','e','w']
+    stopwords = ['a', 'an', 'that', 'the', 'teh', 'yonder', 'to', 'want']
+    TAKE  = ['pickup', 'grab','snatch', 'get']
+    DROP =  ['drop', 'yeet', '85', '']
+    REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
+    BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
 
     def debug(player=None):
         print(f"[DEBUG]rooms dict: {room.keys()}")
         if player:
             print(f"[DEBUG]current player is {player}")
             print(f"[DEBUG]current room and neighbors: \n {player.room} \n {player.room.neighbor}")
+    def debug_parser():
+        print("DEBUG {}")
+    def parse(raw):
+        if len(raw.split(' ')) == 1 :
+            return [raw]
+        else: 
+            text = REPLACE_BY_SPACE_RE.sub(' ', raw)  # symbols by space in text
+            text = BAD_SYMBOLS_RE.sub('', text) # delete symbols which are in BAD_SYMBOLS_RE
+            tokens = [t for t in text.split(' ') if t not in stopwords]  # split command into words and remove garbage
+            return tokens 
     # Write a loop that:
     while True: 
-    # * Prints the current room name   #assume this means the room that the current player is in.
-
         print(f"\n.....{newplayer.getname()} is in {newplayer.getlocationname()}")
-
     # * Prints the current description (the textwrap module might be useful here).
         print(f"'{newplayer.getlocation().describe()}'")
     # * Waits for user input and decides what to do.
-    #   
+        inv = newplayer.getlocation().getinventory()  # todo format
+        if inv : 
+            print(inv)
+
         rawinput = input("Where to? [n|s|e|w|q] : ")
+
+
         # test input
-        try:  # make it throw and error for fun
-            _ = validinputs.index(rawinput)
-        except ValueError: 
-            print (f"\n Sorry, I didn't understand that! \nPlease Enter one of the following {validinputs}")
-            continue
-        if rawinput == 'q' :
-            print(f"{newplayer} says 'live long and prosper! \/' ")
-            break
-        else:
-            if newplayer.move_to(rawinput):
-                print(f"{newplayer} moved to the {newplayer.getlocationname()}")
+        if len(tokens) == 1 :
+            try:  # make it throw and error for fun
+                _ = validinputs.index(rawinput)
+            except ValueError: 
+                print (f"\n Sorry, I didn't understand that! \nPlease Enter one of the following {validinputs}")
+                continue
+            if rawinput == 'q' : 
+                print(f"{newplayer} says 'live long and prosper! \/' ")
+                break
+            if rawinput == 'i' :
+                print(newplayer.getinventory())
             else:
-                print(f".\n..\n...\n....yeah, nope. there no room in that direction!")
-                print(f"HINT: try {newplayer.getlocation().get_neighbor()}")
-        # If the user enters a cardinal direction, attempt to move to the room there.
-    # Print an error message if the movement isn't allowed.
-    #
-    # If the user enters "q", quit the game.print
+                if newplayer.move_to(rawinput):
+                    print(f"{newplayer} moved to the {newplayer.getlocationname()}")
+                else:
+                    print(f".\n..\n...\n....yeah, nope. there no room in that direction!")
+                    print(f"HINT: try {newplayer.getlocation().get_neighbor()}")
+
+        else:  # we have 
+            # 
 if __name__ == "__main__":
     main()
