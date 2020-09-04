@@ -3,7 +3,6 @@
 import sys
 class Player:
     def __init__(self, name='john doe', room=None): 
-        
         self.name = name
         self.room = room 
         self.inventory = [] 
@@ -41,13 +40,11 @@ class Player:
         direction : string {n,s,e,w}
         return : bool True if current room neighbor exists else False
         """
-
         if self.room.neighbor[direction]:  #check if room in dir exists
             self.__set_room__(self.room.neighbor[direction])
             print(f"..you move {direction}, and enter {self.room})")
             print(f"\n\n... you see the following objects:",
                 f" {[item.name for item in self.room.getinventory()]}")
-
             return True
         else:
             return False
@@ -69,9 +66,11 @@ class Player:
         if the_item:  
             try:
                 self.inventory.remove(the_item)
+                self.room.add_item(the_item)
                 return True
             except ValueError:
                 print(f"\n.\n.\n...sorry, can't drop it if you dont got it!!!")
+                return False
         else:
             print(f"\n.\n.\n...sorry, can't drop it if you dont got it!!!")
             return False

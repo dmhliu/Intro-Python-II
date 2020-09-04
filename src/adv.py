@@ -60,14 +60,11 @@ def main():
         stopwords = ['a', 'an', 'that', 'the', 'teh', 'yonder', 'to', 'want']
 
         if len(raw.split(' ')) == 1 :   
-            print('debug-single arg')
             return [raw]
         else: 
             text = REPLACE_BY_SPACE_RE.sub(' ', raw)  # symbols by space in text
             text = BAD_SYMBOLS_RE.sub('', text) # delete symbols which are in BAD_SYMBOLS_RE
             tokens = [t for t in text.split(' ') if t not in stopwords]  # split command into words and remove garbage
-            print('debug- multi arg')
-            print(f"debug - parsed tokens: {tokens}\n")
             return tokens 
     
     # interactive loop
@@ -76,10 +73,10 @@ def main():
     newplayer.setname(pname)
     newplayer.report()
 
-    TEST = {newplayer.pickup: ['pickup', 'grab','snatch', 'get','take'],
+    CMDS = {newplayer.pickup: ['pickup', 'grab','snatch', 'get','take'],
             newplayer.drop:  ['drop', 'yeet', '86', 'ditch'],
             newplayer.move_to: ['go','move','run'],
-            os._exit: ['q', 'quit', 'adios', 'bye'],
+            exit: ['q', 'quit', 'adios', 'bye'],
             newplayer.report: ['report', 'sitrep'],
             newplayer.getinventorynames: ['i','shakedown', 'inventory', 'inv']    # player inv
             }
@@ -95,21 +92,20 @@ def main():
                 print(f".\n..\n...\n....yeah, nope. there no room in that direction!")
                 print(f"HINT: try {newplayer.getlocation().get_neighbor()}")
         elif True:
-            for cmd, alias in TEST.items():
+            for cmd, alias in CMDS.items():
                 if arg in alias:
-                    print(f'parsed command {cmd} from alias')
                     try: 
                         a = next(parsed_arg_it)   # is there a following arg?
-                        print(a)
-                        print(f"will execute this first with <{a}>")
                         cmd(a)
+                        break
                     except StopIteration:  # only 1 arg try to execute
                         try:
                             cmd()
+                            break
                         except:
                             print("\n....... hmm. I was expecting more from you.\n")            
-        else:  #couldnt interperet the token, complain
-            print(f"\n Eh??? \n\t Whaddya say? {arg} ??"
-                f" Sorry I don't know what to do about that.")
+                else:  #couldnt interperet the token, complain
+                    print(f"\n Eh??? \n\t Whaddya say? {arg} ??"
+                        f" Sorry I don't know what to do about that.")
 if __name__ == "__main__":
     main()
