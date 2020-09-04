@@ -14,7 +14,7 @@ class Room:
         self.s_to = None
         self.e_to = None
         self.w_to = None
-
+        self.inventory = []  # list of items in room
         self.neighbor = {  # store 
                         'n' : self.n_to,
                         's' : self.s_to,
@@ -48,4 +48,27 @@ class Room:
             return True
         else:
             return False
+    def getinventory(self):
+        return self.inventory
+    def getinventorynames(self):
+        return [item.name for item in self.inventory]
+    def remove_item(self,item_name):
+        # first searh corf 
+        inv_names = [i.name for i in self.inventory]
+        d = dict(zip(inv_names,self.inventory))
+        try:
+            the_item = d[item_name]
+        except KeyError:
+            print(f"\n if you cant spell it right just dont bother!")
+            return False
+        try:
+            self.inventory.remove(the_item)
+            return the_item
+        except ValueError: 
+            return False
+    def add_item(self, item, debug=False):
+        self.inventory.append(item)
+        if debug:
+            print(f"{item.name} added to {self.name}")
+    
 
