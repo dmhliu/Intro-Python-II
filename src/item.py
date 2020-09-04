@@ -6,3 +6,5 @@ class Item:
         self.name = name
     def __str__(self):
         return self.name
+    def print(self):
+        print(self.name)
